@@ -9,7 +9,7 @@
                     <div class="slider-1 slider-animate product-wrapper no-arrow">
                         <div>
                             <div class="banner-contain-2 hover-effect">
-                                <img src="{{ asset('front') }}/assets/images/shop/3.jpg"
+                                <img src="{{ asset('front') }}/assets/images/shop/4.jpg"
                                     class="bg-img rounded-3 blur-up lazyload" alt="">
                                 <div class="banner-detail p-center-right position-relative shop-banner ms-auto banner-small">
                                     <div>
@@ -22,7 +22,7 @@
 
                         <div>
                             <div class="banner-contain-2 hover-effect">
-                                <img src="{{ asset('front') }}/assets/images/shop/1.jpg"
+                                <img src="{{ asset('front') }}/assets/images/shop/4.jpg"
                                     class="bg-img rounded-3 blur-up lazyload" alt="">
                                 <div
                                     class="banner-detail p-center-right position-relative shop-banner ms-auto banner-small">
