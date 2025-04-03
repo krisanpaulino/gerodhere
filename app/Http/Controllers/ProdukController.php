@@ -84,6 +84,7 @@ class ProdukController extends Controller
             'penenun_id' => 'required',
             'gambar_produk' => 'required',
         ]);
+        dd($request->hasFile('gambar_produk'));
         $path = $request->file('gambar_produk')->storePublicly('produk', 'public');
         $validated['gambar_produk'] = $path;
 
