@@ -31,9 +31,9 @@ class TransaksiController extends Controller
     {
         $title = 'Butuh Verifikasi';
 
-        $transaksi = Transaksi::with(['pembayaran' => function ($query) {
-            $query->where('status_pembayaran', 'verifikasi');
-        }])->where('status_transaksi', '=', 'checkout')->get();
+        $transaksi = Transaksi::join('pembayaran', 'pembayaran.transaksi_id', '=', 'transaksi.transaksi_id')
+            ->where('pembayaran.status_pembayaran', '=', 'verifikasi')
+            ->where('status_transaksi', '=', 'checkout')->get();
         return view('backend.transaksi', compact('transaksi', 'title'));
     }
     function verifikasi(Request $request)
