@@ -267,6 +267,8 @@ class TransaksiController extends Controller
         }
         // dd($pembeli);
         $curl = curl_init();
+        //         curl_setopt($this->ch, CURLOPT_SSL_VERIFYHOST, 0);
+        // curl_setopt($this->ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt_array($curl, array(
             CURLOPT_URL => "https://api.rajaongkir.com/starter/cost",
             CURLOPT_RETURNTRANSFER => true,
@@ -280,6 +282,8 @@ class TransaksiController extends Controller
                 "content-type: application/x-www-form-urlencoded",
                 "key: 78861dcc740d4ea5ba1c732fe9183da0"
             ),
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false
         ));
         $response = curl_exec($curl);
         $err = curl_error($curl);
