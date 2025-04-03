@@ -292,7 +292,7 @@ class TransaksiController extends Controller
             echo "cURL Error #:" . $err;
         }
         $array_response = json_decode($response, TRUE);
-        dd($err);
+        // dd($err);
         $ongkir = $array_response["rajaongkir"]["results"][0];
         return view('frontend.checkout', compact('keranjang', 'title', 'ongkir', 'pelanggan', 'metode'));
     }
