@@ -168,7 +168,7 @@
                             <td>{{ $row->status_transaksi }}</td>
                             <td>Rp{{ number_format($row->total_produk) }}</td>
                             <td>Rp{{ number_format($row->total_ongkir) }}</td>
-                            <td>Rp{{ number_format($row->total_ongkir) }}</td>
+                            <td>Rp{{ number_format($row->grand_total) }}</td>
                         </tr>
                         {{ $total += $row->grand_total }}
                     @endforeach

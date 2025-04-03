@@ -137,7 +137,7 @@
                                                 <div class="flex-grow-1">
                                                     <h6 class="msg-name">Pesanan masuk </h6>
                                                     <p class="msg-info">Anda memiliki
-                                                        {{ \App\Models\Transaksi::where('status_transaksi', '=', 'verifikasi')->count('transaksi.transaksi_id') }}
+                                                        {{ \App\Models\Transaksi::where('status_transaksi', '=', 'checkout')->count('transaksi.transaksi_id') }}
                                                         pesanan masuk</p>
                                                 </div>
                                             </div>

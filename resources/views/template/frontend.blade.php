@@ -9,7 +9,7 @@
     <meta name="keywords" content="Fastkart">
     <meta name="author" content="Fastkart">
     <link rel="icon" href="{{ asset('front') }}/assets/images/favicon/2.png" type="image/x-icon">
-    <title>On-demand last-mile delivery</title>
+    <title>Gerodhere</title>
 
     <!-- Google font -->
     <link rel="preconnect" href="https://fonts.gstatic.com">

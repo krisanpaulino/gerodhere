@@ -11,7 +11,7 @@ class DashboardController extends Controller
 {
     function admin()
     {
-        $masuk = Transaksi::where('status_transaksi', '=', 'verifikasi')->count('transaksi.transaksi_id');
+        $masuk = Transaksi::where('status_transaksi', '=', 'checkout')->count('transaksi.transaksi_id');
         // dd($transaksi);
         //Total pesanan diproses
         $proses = Transaksi::join('pengiriman', 'pengiriman.transaksi_id', '=', 'transaksi.transaksi_id')->where('pengiriman.status_pengiriman', '=', 'dikirim')->count('transaksi.transaksi_id');
