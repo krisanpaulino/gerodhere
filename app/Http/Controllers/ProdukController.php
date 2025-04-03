@@ -85,7 +85,7 @@ class ProdukController extends Controller
             'gambar_produk' => 'required',
         ]);
         $path = $request->file('gambar_produk')->storePublicly('produk', 'public');
-        dd($path);
+        // dd($path);
         $validated['gambar_produk'] = $path;
 
 
