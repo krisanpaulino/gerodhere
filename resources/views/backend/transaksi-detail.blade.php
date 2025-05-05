@@ -56,6 +56,9 @@
                             <div class="date">Tanggal Pembayaran: {{ $transaksi->pembayaran->tanggal_bayar }}</div>
                             <div class="date">Status Transaksi: <b
                                     class="text-primary font-weight-bold">{{ $transaksi->status_transaksi }}</b></div>
+                            <div class="date">Alamat Pengiriman: <b
+                                    class="text-primary font-weight-2">{{ $transaksi->alamat_pengiriman }}</b>
+                            </div>
                             <div class="date">Status Pengiriman: <b
                                     class="text-primary font-weight-2">{{ $transaksi->pengiriman->status_pengiriman }}</b>
                             </div>

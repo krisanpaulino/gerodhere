@@ -147,6 +147,6 @@ class ProdukController extends Controller
         $produk = Produk::where('penenun_id', '=', $penenun_id)->get();
         $title = 'Produk Penenun';
 
-        return view('backend.produk_tersedia', compact('title', 'produk', 'penenun'));
+        return view('backend.produk_penenun', compact('title', 'produk', 'penenun'));
     }
 }

@@ -53,6 +53,7 @@
                             <th>#</th>
                             <th>Tanggal Transaksi</th>
                             <th>Pelanggan</th>
+                            <th>Produk</th>
                             <th>Status Transaksi</th>
                             <th>Status Pembayaran</th>
                             <th>Subotal Produk</th>
@@ -67,6 +68,11 @@
                                 <td>{{ $i++ }}</td>
                                 <td>{{ $row->tanggal_transaksi }}</td>
                                 <td>{{ $row->pelanggan->nama_pelanggan }}</td>
+                                <td>
+                                    @foreach ($row->detail as $item)
+                                        {{ $item->produk->nama_produk }}; <br>
+                                    @endforeach
+                                </td>
                                 <td>{{ $row->pembayaran->status_pembayaran }}</td>
                                 <td>{{ $row->status_transaksi }}</td>
                                 <td>Rp{{ number_format($row->total_produk) }}</td>

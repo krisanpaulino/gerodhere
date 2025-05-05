@@ -315,7 +315,8 @@ class TransaksiController extends Controller
             'status_transaksi' => $status_transaksi,
             'total_produk' => $request->subtotal,
             'total_ongkir' => $request->ongkir,
-            'grand_total' => $request->subtotal + $request->ongkir
+            'grand_total' => $request->subtotal + $request->ongkir,
+            'alamat_transaksi' => $request->alamat_transaksi
         ];
         $transaksi = new Transaksi();
         $transaksi->fill($datatrx);

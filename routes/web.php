@@ -42,6 +42,7 @@ Route::middleware(AdminLogin::class)->prefix('admin')->group(function () {
     Route::post('/penenun/insert', [PenenunController::class, 'insert'])->name('penenun.insert');
     Route::post('/penenun/update', [PenenunController::class, 'update'])->name('penenun.update');
     Route::post('/penenun/delete', [PenenunController::class, 'delete'])->name('penenun.delete');
+    Route::get('/hasil-tenun/{id}', [ProdukController::class, 'byPenenun'])->name('penenun.hasil');
 
     Route::get('/kategori', [ProdukController::class, 'kategori'])->name('kategori.index');
     Route::post('/kategori/insert', [ProdukController::class, 'insertKategori'])->name('kategori.insert');
