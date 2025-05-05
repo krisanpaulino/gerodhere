@@ -27,7 +27,8 @@ class Transaksi extends Model
     function pembayaran(): HasOne
     {
         return $this->hasOne(Pembayaran::class, 'transaksi_id', 'transaksi_id')->withDefault([
-            'status_pembayaran' => ''
+            'status_pembayaran' => '',
+            'nama_metode' => 'undefined'
         ]);
     }
 
