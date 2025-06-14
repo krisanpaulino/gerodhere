@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
@@ -18,9 +19,11 @@ Route::get('/signup', [AuthController::class, 'registrasi'])->name('signup');
 Route::post('/login', [AuthController::class, 'loginPost'])->name('login.post');
 Route::post('/signup', [AuthController::class, 'registrasiPost'])->name('signup.post');
 
-
+Route::get('/ajax-carilokasi', [AjaxController::class, 'lokasi'])->name('ajax.getLokasi');
+Route::get('/ajax-cost', [AjaxController::class, 'cost'])->name('ajax.getCost');
 Route::post('/profil/update', [AuthController::class, 'updateProfil'])->name('profil.update');
 Route::post('/profil/ganti-password', [AuthController::class, 'gantiPassword'])->name('profil.password');
+Route::get('/paid', [TransaksiController::class, 'paid'])->name('paid');
 
 //For Pelanggan
 Route::get('/profil', [HomeController::class, 'profil'])->name('profil')->middleware(PelangganLogin::class);
@@ -32,6 +35,7 @@ Route::post('/cart/delete', [HomeController::class, 'deleteCart'])->name('cart.d
 Route::post('/order/upload-bukti', [TransaksiController::class, 'uploadBukti'])->name('order.payment')->middleware(PelangganLogin::class);
 Route::get('/order', [HomeController::class, 'listOrder'])->name('order.list')->middleware(PelangganLogin::class);
 Route::get('/order/{id}', [HomeController::class, 'detailOrder'])->name('order.detail')->middleware(PelangganLogin::class);
+Route::post('/ulas', [HomeController::class, 'createUlasan'])->name('ulasan.post')->middleware(PelangganLogin::class);
 
 Route::middleware(AdminLogin::class)->prefix('admin')->group(function () {
     Route::get('/', [DashboardController::class, 'admin'])->name('admin');
@@ -55,6 +59,7 @@ Route::middleware(AdminLogin::class)->prefix('admin')->group(function () {
     Route::post('/produk/insert', [ProdukController::class, 'insert'])->name('produk.insert');
     Route::post('/produk/update', [ProdukController::class, 'update'])->name('produk.update');
     Route::post('/produk/delete', [ProdukController::class, 'delete'])->name('produk.delete');
+    Route::post('/produk/update-stok', [ProdukController::class, 'updateStok'])->name('produk.updateStok');
 
     Route::get('/transaksi/butuh-verifikasi', [TransaksiController::class, 'needVerify'])->name('transaksi.verify');
     Route::get('/transaksi/butuh-kirim', [TransaksiController::class, 'needShipping'])->name('transaksi.ship');

@@ -89,6 +89,8 @@
                                     <th>Penenun</th>
                                     <th>Harga Satuan</th>
                                     <th>Kuantitas</th>
+                                    <th>Rating</th>
+                                    <th>Ulasan</th>
                                     <th>Total Produk</th>
                                 </tr>
                             </thead>
@@ -103,6 +105,8 @@
                                         <td>{{ $row->produk->penenun->nama_penenun }}</td>
                                         <td>Rp{{ number_format($row->produk->harga_produk) }}</td>
                                         <td>{{ $row->kuantitas }}</td>
+                                        <td>{{ $row->rating }}</td>
+                                        <td>{{ $row->ulasan }}</td>
                                         <td>Rp{{ number_format($row->kuantitas * $row->produk->harga_produk) }}</td>
                                     </tr>
                                 @endforeach

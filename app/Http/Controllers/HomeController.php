@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\City;
 use App\Models\Detailpembelian;
+use App\Models\Detailtransaksi;
 use App\Models\Kategori;
 use App\Models\Keranjang;
 use App\Models\Pelanggan;
@@ -19,6 +20,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
 
@@ -136,5 +138,23 @@ class HomeController extends Controller
         $kota = City::get();
 
         return view('frontend.profil', compact('user', 'title', 'provinsi', 'kota'));
+    }
+
+    function createUlasan(Request $request): RedirectResponse
+    {
+        $detail_id = $request->detailtransaksi_id;
+        // dd($detail_id);
+        $detail = Detailtransaksi::find($detail_id);
+        if ($detail->ulasan != null)
+            return back()->with('message', "dangerToast('Anda sudah membuat  ulasan untuk pesanan ini');");
+
+        $validated = $request->validate([
+            'ulasan' => 'required',
+            'rating' => 'required'
+        ]);
+
+        $detail->update($validated);
+
+        return back()->with('message', "successToast('Berhasil membuat ulasan');");
     }
 }

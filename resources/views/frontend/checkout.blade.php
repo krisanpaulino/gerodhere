@@ -39,43 +39,31 @@
                                             <div class="checkout-title">
                                                 <h4>Alamat Penerima</h4>
                                             </div>
-
+                                            <div class="form-group">
+                                                <select id="mySelect2" style="width: 100%" name="lokasi_id">
+                                                    <option value="">Cari Kota / Kecamatan</option>
+                                                </select>
+                                            </div>
                                             <div class="checkout-detail">
                                                 <div class="row g-4">
                                                     <div class="col-xxl-6 col-lg-12 col-md-6">
-                                                        <div class="delivery-address-box">
+                                                        <div class="delivery-address-box" id="address">
                                                             <div>
 
-                                                                <div class="label">
+                                                                {{-- <div class="label">
                                                                     <label>Alamat saya</label>
-                                                                </div>
+                                                                </div> --}}
 
+                                                                <input type="hidden" name="alamat_region"
+                                                                    id="stringLokasi">
                                                                 <ul class="delivery-address-detail">
+
                                                                     <li>
-                                                                        <h4 class="fw-500">{{ $pelanggan->nama_pelanggan }}
-                                                                        </h4>
+                                                                        <div class="form-group mb-2">
+                                                                            <label for="">Alamat Jalan</label>
+                                                                            <textarea name="alamat_transaksi" class="form-control" id="" cols="50" rows="10" required></textarea>
+                                                                        </div>
                                                                     </li>
-                                                                    <li>
-                                                                        <textarea name="alamat_transaksi" class="form-control text-content" rows="5">{{ $pelanggan->nama_jalan }},{{ $pelanggan->kelurahan }}, {{ $pelanggan->kecamatan }}, {{ $pelanggan->city->city }}, {{ $pelanggan->province->province }}, {{ $pelanggan->kode_pos }}</textarea>
-                                                                    </li>
-                                                                    {{-- <li>
-                                                                        <p class="text-content"><span
-                                                                                class="text-title">Alamat
-                                                                                : </span>{{ $pelanggan->nama_jalan }},
-                                                                            {{ $pelanggan->kelurahan }},
-                                                                            {{ $pelanggan->kecamatan }},
-                                                                            {{ $pelanggan->city->city }},
-                                                                            {{ $pelanggan->province->province }},
-                                                                            {{ $pelanggan->kode_pos }}</p>
-
-                                                                    </li> --}}
-
-                                                                    {{-- <li>
-                                                                        <h6 class="text-content"><span
-                                                                                class="text-title">Kode Pos
-                                                                                :</span> {{ $pelanggan->kode_pos }}</h6>
-                                                                    </li> --}}
-
                                                                     <li>
                                                                         <h6 class="text-content mb-0"><span
                                                                                 class="text-title">Telp.
@@ -117,13 +105,13 @@
                                                                                 class="form-select">
                                                                                 <option value="">Pilih pengiriman
                                                                                 </option>
-                                                                                @foreach ($ongkir['costs'] as $cost)
+                                                                                {{-- @foreach ($ongkir['costs'] as $cost)
                                                                                     <option
                                                                                         value="{{ $cost['cost'][0]['value'] }}">
                                                                                         {{ $cost['description'] }} -
                                                                                         Rp{{ number_format($cost['cost'][0]['value']) }}
                                                                                     </option>
-                                                                                @endforeach
+                                                                                @endforeach --}}
                                                                             </select>
                                                                         </div>
                                                                     </div>
@@ -159,7 +147,7 @@
                                                                                 for="standard">Pilih Pembayaran</label>
                                                                             <select name="metode_id" id="metode_id"
                                                                                 class="form-select">
-                                                                                <option value="">Pilih pp</option>
+                                                                                <option value="">Pilih Metode</option>
                                                                                 @foreach ($metode as $item)
                                                                                     <option
                                                                                         value="{{ $item->metodepembayaran_id }}">
@@ -219,7 +207,7 @@
 
                                     <li>
                                         <h4>Shipping</h4>
-                                        <h4 class="price" id="ongkir"></h4>
+                                        <h4 class="price" id="shipping"></h4>
                                     </li>
 
 
@@ -230,7 +218,7 @@
 
                                     <li class="list-total">
                                         <h4>Total (IDR)</h4>
-                                        <h4 class="price" id="grand_total"></h4>
+                                        <h4 class="price" id="Total"></h4>
                                     </li>
                                 </ul>
                             </div>
@@ -244,4 +232,66 @@
         </form>
     </section>
     <!-- Checkout section End -->
+@endsection
+@section('cssplugins')
+    <link href="{{ asset('front') }}/css/select2.min.css" rel="stylesheet" />
+@endsection
+@section('jsplugins')
+    <script src="{{ asset('front') }}/js/select2.min.js"></script>
+@endsection
+@section('scripts')
+    <script>
+        $('#mySelect2').on('change', function(e) {
+            var lokasi = $('#mySelect2').val()
+            $('#stringLokasi').val($('#mySelect2 option:selected').text());
+            $('#ongkir').empty();
+
+            $.ajax({
+                url: "{{ route('ajax.getCost') }}",
+                type: 'GET',
+                data: {
+                    destination: lokasi
+                },
+                success: function(data) {
+                    console.log(data);
+
+                    $('#ongkir').append($('<option>', {
+                        text: 'Pilih Pengiriman'
+                    }));
+                    $.each(data, function(i, item) {
+                        $('#ongkir').append($('<option>', {
+                            value: item.cost,
+                            text: item.description + ' (' + item.etd + ') - Rp' +
+                                item.cost.toLocaleString('en-US')
+                        }));
+                    });
+                },
+                error: function(e) {
+                    console.log(e);
+
+                },
+                dataType: "json"
+            });
+        })
+
+        $('body').on('change', '#ongkir', function(e) {
+            var ongkir = $('body #ongkir').map(function() {
+                return $(this).val();
+            }).get();
+            console.log(ongkir);
+
+            var totalongkir = 0;
+            $.each(ongkir, function(key, val) {
+
+                if (val != '') {
+                    var subtotal = parseFloat(val)
+                    totalongkir += subtotal
+                }
+
+            });
+            $('#shipping').text('Rp' + totalongkir.toLocaleString('en-US'))
+            var total = totalongkir + {{ $total }}
+            $('#Total').text('Rp' + total.toLocaleString('en-Us'))
+        })
+    </script>
 @endsection

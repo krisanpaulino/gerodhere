@@ -32,6 +32,7 @@
 
     <!-- Template css -->
     <link id="color-link" rel="stylesheet" type="text/css" href="{{ asset('front') }}/assets/css/style.css">
+    @yield('cssplugins')
     <style>
         .nav-item {
             .nav-linko {
@@ -54,6 +55,30 @@
                 }
 
             }
+        }
+
+        .star-rating {
+            direction: rtl;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .star-rating input {
+            display: none;
+        }
+
+        .star-rating label {
+            color: #ddd;
+            font-size: 24px;
+            padding: 0 2px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .star-rating label svg:hover,
+        .star-rating label svg:hover~label svg,
+        .star-rating input:checked~label svg {
+            fill: #ffc107;
         }
     </style>
 </head>
@@ -243,6 +268,7 @@
 
     <!-- Quantity js -->
     <script src="{{ asset('front') }}/assets/js/quantity-2.js"></script>
+    @yield('jsplugins')
 
     <!-- WOW js -->
     <script src="{{ asset('front') }}/assets/js/wow.min.js"></script>
@@ -254,6 +280,40 @@
     <!-- theme setting js -->
     <script src="{{ asset('front') }}/assets/js/theme-setting.js"></script>
     @yield('scripts')
+    <script>
+        $('#rate2').on('show.bs.modal', function(event) {
+            console.log('kode');
+            var kode = $(event.relatedTarget).data('id');
+
+            $(this).find('#kodeitem').attr("value", kode);
+        });
+        $(document).ready(function() {
+            $('#mySelect2').select2({
+                ajax: {
+                    url: "{{ route('ajax.getLokasi') }}",
+                    data: function(params) {
+                        var query = {
+                            search: params.term,
+                        }
+
+                        // Query parameters will be ?search=[term]&type=public
+                        return query;
+                    },
+                    processResults: function(data) {
+                        var res = jQuery.parseJSON(data)
+                        console.log(res.results);
+
+                        // Transforms the top-level key of the response object from 'items' to 'results'
+                        return {
+                            results: res.results
+                        };
+                    }
+
+                }
+            });
+            // $('.form-select').select2();
+        });
+    </script>
 </body>
 
 </html>

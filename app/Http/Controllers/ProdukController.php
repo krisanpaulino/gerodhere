@@ -120,8 +120,8 @@ class ProdukController extends Controller
     {
         $produk_id = $request->produk_id;
         $produk = Produk::find($produk_id);
-        $stok = $request->stok;
-        $produk->increment('stok', $stok);
+        $stok = $request->stok_produk;
+        $produk->increment('stok_produk', $stok);
         return redirect(route('produk.index'));
     }
 

@@ -259,47 +259,51 @@ class TransaksiController extends Controller
         $pelanggan = Pelanggan::where('user_id', '=', Session::get('user_id'))->first();
         $keranjang = Keranjang::where('pelanggan_id', '=', $pelanggan->pelanggan_id)->where('checkout', '=', '0')->get();
         $metode = Metodepembayaran::all();
-
+        $total = 0;
         foreach ($keranjang as $cart) {
             if (!Produk::where('produk_id', "=", $cart->produk_id)->where('stok_produk', '>=', $cart->kuantitas)->exists()) {
                 return back()->with('message', "dangerToast('Pesanan tidak boleh melebihi stok');");
             }
+            $produk = Produk::find($cart->produk_id);
+            $total += $produk->harga_produk;
         }
-        // dd($pembeli);
-        $curl = curl_init();
-        //         curl_setopt($this->ch, CURLOPT_SSL_VERIFYHOST, 0);
-        // curl_setopt($this->ch, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.rajaongkir.com/starter/cost",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => "origin=213&destination=$pelanggan->kota&weight=1&courier=jne",
-            CURLOPT_HTTPHEADER => array(
-                "content-type: application/x-www-form-urlencoded",
-                "key: 78861dcc740d4ea5ba1c732fe9183da0"
-            ),
-            CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_SSL_VERIFYHOST => false
-        ));
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-        curl_close($curl);
-        if ($err) {
-            echo "cURL Error #:" . $err;
-        }
-        $array_response = json_decode($response, TRUE);
-        // dd($array_response["rajaongkir"]["results"][0]);
-        $ongkir = $array_response["rajaongkir"]["results"][0];
-        return view('frontend.checkout', compact('keranjang', 'title', 'ongkir', 'pelanggan', 'metode'));
+        // // dd($pembeli);
+        // $curl = curl_init();
+        // //         curl_setopt($this->ch, CURLOPT_SSL_VERIFYHOST, 0);
+        // // curl_setopt($this->ch, CURLOPT_SSL_VERIFYPEER, 0);
+        // curl_setopt_array($curl, array(
+        //     CURLOPT_URL => "https://api.rajaongkir.com/starter/cost",
+        //     CURLOPT_RETURNTRANSFER => true,
+        //     CURLOPT_ENCODING => "",
+        //     CURLOPT_MAXREDIRS => 10,
+        //     CURLOPT_TIMEOUT => 30,
+        //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        //     CURLOPT_CUSTOMREQUEST => "POST",
+        //     CURLOPT_POSTFIELDS => "origin=213&destination=$pelanggan->kota&weight=1&courier=jne",
+        //     CURLOPT_HTTPHEADER => array(
+        //         "content-type: application/x-www-form-urlencoded",
+        //         "key: 78861dcc740d4ea5ba1c732fe9183da0"
+        //     ),
+        //     CURLOPT_SSL_VERIFYPEER => false,
+        //     CURLOPT_SSL_VERIFYHOST => false
+        // ));
+        // $response = curl_exec($curl);
+        // $err = curl_error($curl);
+        // curl_close($curl);
+        // if ($err) {
+        //     echo "cURL Error #:" . $err;
+        // }
+        // $array_response = json_decode($response, TRUE);
+        // // dd($array_response["rajaongkir"]["results"][0]);
+        // $ongkir = $array_response["rajaongkir"]["results"][0];
+        return view('frontend.checkout', compact('keranjang', 'title', 'pelanggan', 'metode', 'total'));
     }
+
 
     function placeOrder(Request $request): RedirectResponse
     {
 
+        // dd($request->all());
         $pelanggan = Pelanggan::where('user_id', '=', Session::get('user_id'))->first();
         $keranjang = Keranjang::where('pelanggan_id', '=', $pelanggan->pelanggan_id)->where('checkout', '=', '0')->get();
         $status_pembayaran = 'menunggu pembayaran';
@@ -316,8 +320,35 @@ class TransaksiController extends Controller
             'total_produk' => $request->subtotal,
             'total_ongkir' => $request->ongkir,
             'grand_total' => $request->subtotal + $request->ongkir,
-            'alamat_transaksi' => $request->alamat_transaksi
+            'alamat_transaksi' => $request->alamat_transaksi,
+            'lokasi_id' => $request->lokasi_id,
+            'alamat_region' => $request->alamat_region,
         ];
+
+        \Midtrans\Config::$serverKey = 'SB-Mid-server-y0kYrE2DPn-tpSxXDXiWIyQh';
+        // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
+        \Midtrans\Config::$isProduction = false;
+        // Set sanitization on (default)
+        \Midtrans\Config::$isSanitized = true;
+        // Set 3DS transaction for credit card to true
+        \Midtrans\Config::$is3ds = true;
+
+        $order_id = rand();
+        $params = array(
+            'transaction_details' => array(
+                'order_id' => $order_id,
+                'gross_amount' => $datatrx['grand_total'],
+            ),
+            'customer_details' => array(
+                'first_name' => $pelanggan->nama_pelanggan,
+                'email' => $pelanggan->user->email,
+                'phone' => $pelanggan->kontak_pelanggan,
+            ),
+        );
+        $snapToken = \Midtrans\Snap::getSnapToken($params);
+        $datatrx['token'] = $snapToken;
+        $datatrx['order_id'] = $order_id;
+
         $transaksi = new Transaksi();
         $transaksi->fill($datatrx);
         $transaksi->save();
@@ -355,6 +386,30 @@ class TransaksiController extends Controller
         ];
         Pembayaran::insert($pembayaran);
 
+        return redirect(route('order.detail', $transaksi->transaksi_id));
+    }
+
+    function paid(Request $request)
+    {
+        $order_id = $request->order_id;
+        $transaksi = Transaksi::where('order_id', $order_id)->first();
+        $transaksi->status_transaksi = 'proses';
+        $transaksi->update();
+
+        $pengiriman =  Pengiriman::where('transaksi_id', '=', $transaksi->transaksi_id)->first();
+        $pengiriman->update(['status_pengiriman' => 'dikemas']);
+
+        $logPengiriman = [
+            'pengiriman_id' => $pengiriman->pengiriman_id,
+            'status_pengiriman' => 'dikemas',
+            'keterangan' => '-'
+        ];
+
+        LogPengiriman::insert($logPengiriman);
+
+        $pembayaran =  Pembayaran::where('transaksi_id', '=', $transaksi->transaksi_id)->first();
+        $pembayaran->update(['status_pembayaran' => 'valid']);
+        // dd('success');
         return redirect(route('order.detail', $transaksi->transaksi_id));
     }
 
