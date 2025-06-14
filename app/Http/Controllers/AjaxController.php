@@ -45,8 +45,8 @@ class AjaxController extends Controller
     {
         $destination = $request->destination;
         $curl = curl_init();
-        //         curl_setopt($this->ch, CURLOPT_SSL_VERIFYHOST, 0);
-        // curl_setopt($this->ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt_array($curl, array(
             CURLOPT_URL => "https://rajaongkir.komerce.id/api/v1/calculate/domestic-cost",
             CURLOPT_RETURNTRANSFER => true,
