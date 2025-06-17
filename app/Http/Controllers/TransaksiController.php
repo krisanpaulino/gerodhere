@@ -394,7 +394,7 @@ class TransaksiController extends Controller
         $order_id = $request->order_id;
         $transaksi = Transaksi::where('order_id', $order_id)->first();
         $transaksi->status_transaksi = 'proses';
-        $transaksi->update();
+        $transaksi->save();
 
         $pengiriman =  Pengiriman::where('transaksi_id', '=', $transaksi->transaksi_id)->first();
         $pengiriman->update(['status_pengiriman' => 'dikemas']);
