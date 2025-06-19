@@ -259,11 +259,15 @@
                         text: 'Pilih Pengiriman'
                     }));
                     $.each(data, function(i, item) {
-                        $('#ongkir').append($('<option>', {
-                            value: item.cost,
-                            text: item.description + ' (' + item.etd + ') - Rp' +
-                                item.cost.toLocaleString('en-US')
-                        }));
+                        if (item.etd != '') {
+                            $('#ongkir').append($('<option>', {
+                                value: item.cost,
+                                text: item.name + '-' + item.description + ' (' +
+                                    item.etd +
+                                    ') - Rp' +
+                                    item.cost.toLocaleString('en-US')
+                            }));
+                        }
                     });
                 },
                 error: function(e) {

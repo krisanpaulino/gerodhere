@@ -324,6 +324,9 @@ class TransaksiController extends Controller
             'lokasi_id' => $request->lokasi_id,
             'alamat_region' => $request->alamat_region,
         ];
+        $arr = explode('|', $datatrx['lokasi_id']);
+        $datatrx['lokasi_id'] = $arr[0];
+        $datatrx['city_name'] = $arr[1];
 
         \Midtrans\Config::$serverKey = 'SB-Mid-server-y0kYrE2DPn-tpSxXDXiWIyQh';
         // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).

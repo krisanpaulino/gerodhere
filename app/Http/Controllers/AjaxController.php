@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Lokasitoko;
+use App\Models\LokasitokoModel;
 use Illuminate\Http\Request;
 
 class AjaxController extends Controller
@@ -34,7 +36,7 @@ class AjaxController extends Controller
         $result = [];
         foreach ($array_response['data'] as $key => $res) {
             $result[$key] = [
-                'id' => $res['id'],
+                'id' => $res['id'] . '|' . $res['city_name'],
                 'text' => $res['label']
             ];
         }
@@ -44,6 +46,9 @@ class AjaxController extends Controller
     function cost(Request $request)
     {
         $destination = $request->destination;
+        $arr = explode('|', $destination);
+        $location = $arr[0];
+        $city_name = $arr[1];
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
@@ -52,10 +57,10 @@ class AjaxController extends Controller
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_POSTFIELDS => array(
-                'origin' => '34462',
-                'destination' => $destination,
+                'origin' => '36962',
+                'destination' => $location,
                 'weight' => 1000,
-                'courier' => 'jne'
+                'courier' => 'jne:sicepat:ide:sap:jnt:ninja:tiki:lion:anteraja:pos:ncs:rex:rpx:sentral:star:wahana:dse'
             ),
             CURLOPT_MAXREDIRS => 10,
             CURLOPT_TIMEOUT => 30,
@@ -80,6 +85,15 @@ class AjaxController extends Controller
         //     ];
         // }
         // $data['results'] = $result;
+        $lokasi = Lokasitoko::first();
+        if ($lokasi->city_name == $city_name) {
+            $array_response['data'][] = [
+                'cost' => 10000,
+                'etd' => '0 day',
+                'name' => 'Jasa Kirim Toko',
+                'description' => 'Berlaku dalam kota yang sama',
+            ];
+        }
         echo json_encode($array_response['data']);
     }
 }
