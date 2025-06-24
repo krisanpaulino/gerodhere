@@ -161,7 +161,12 @@
                                                         </span></a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link" href="{{ route('order.list') }}">My Order</a>
+                                                    <a class="nav-link" href="{{ route('order.list') }}">My Order
+                                                        <span
+                                                            class="position-absolute top-0 start-100 translate-middle badge bg-danger"
+                                                            id="Notif">
+                                                        </span>
+                                                    </a>
                                                 </li>
                                                 <li class="nav-item">
                                                     <a class="nav-link" href="{{ url('/profil') }}">My Profile</a>
@@ -313,6 +318,29 @@
             });
             // $('.form-select').select2();
         });
+
+        @if (Session::get('login_pelanggan'))
+            function doPoll() {
+                // Get the JSON
+                var count = $('#Notif').text().par
+                count = parseInt(count)
+
+                $.ajax({
+                    url: "{{ route('ajax.getNotif') }}",
+                    type: 'get',
+                    success: function(data) {
+
+                        if (data != count) {
+                            $('#Notif').text(data)
+                        }
+                        // Retry after a second
+                        setTimeout(doPoll, 5000);
+                    },
+                    dataType: "json"
+                });
+            }
+            doPoll();
+        @endif
     </script>
 </body>
 

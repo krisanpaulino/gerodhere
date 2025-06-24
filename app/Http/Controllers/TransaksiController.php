@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Detailpembelian;
 use App\Models\Detailtransaksi;
 use App\Models\Keranjang;
+use App\Models\Komplain;
 use App\Models\LogPengiriman;
 use App\Models\Metodepembayaran;
 use App\Models\Pelanggan;
@@ -71,6 +72,7 @@ class TransaksiController extends Controller
     function kirim(Request $request): RedirectResponse
     {
         $transaksi_id = $request->transaksi_id;
+        $transaksi = Transaksi::find($transaksi_id);
         $pengiriman =  Pengiriman::where('transaksi_id', '=', $transaksi_id)->first();
         $pengiriman->status_pengiriman = 'dikirim';
         $pengiriman->resi = $request->resi;
@@ -82,6 +84,9 @@ class TransaksiController extends Controller
             'keterangan' => '-'
         ];
         LogPengiriman::insert($logPengiriman);
+
+        $transaksi->read = 0;
+        $transaksi->update();
 
         return back()->with('message', 'succesToast("Berhasil proses pengiriman")');
     }
@@ -118,7 +123,7 @@ class TransaksiController extends Controller
         ];
         LogPengiriman::insert($logPengiriman);
 
-        $transaksi->update(['status_transaksi' => 'selesai']);
+        $transaksi->update(['status_transaksi' => 'selesai', 'read' => 0]);
 
         return back()->with('message', 'succesToast("Berhasil proses pengiriman")');
         // array_find($logPengiriman, fun)
@@ -436,5 +441,19 @@ class TransaksiController extends Controller
         $pembayaran->status_pembayaran = 'verifikasi';
         $pembayaran->save();
         return back()->with('message', "successToast('pembayaran diterima, menunggu verifikasi')");
+    }
+    function komplain()
+    {
+        $komplain = Komplain::orderBy('komplain_id', 'desc')->get();
+        $title = 'Komplain';
+        return view('backend.komplain_index', compact('komplain', 'title'));
+    }
+    function komplainDetail($komplain_id)
+    {
+        $komplain = Komplain::find($komplain_id);
+        $komplain->read = 1;
+        $komplain->save();
+        $title = 'Detail Komplain';
+        return view('backend.komplain_detail', compact('komplain', 'title'));
     }
 }

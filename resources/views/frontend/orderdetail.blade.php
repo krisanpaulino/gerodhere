@@ -78,7 +78,34 @@
                                         </div>
                                     </div>
                                 </li>
+                                <li>
+                                    <div class="checkout-box">
+                                        <div class="checkout-title">
+                                            <h4>Status Pengiriman</h4>
+                                        </div>
 
+                                        <div class="checkout-detail">
+                                            <div class="row g-4">
+                                                <div class="col-xxl-6 col-lg-12 col-md-6">
+                                                    <div class="delivery-address-box">
+                                                        <div>
+
+
+                                                            <ul class="delivery-address-detail">
+                                                                @if ($transaksi->pengiriman != null)
+                                                                    <li>
+                                                                        <span
+                                                                            class="text-success fs-4">{{ $transaksi->pengiriman->status_pengiriman }}</span>
+                                                                    </li>
+                                                                @endif
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
                                 <li>
                                     <div class="checkout-icon">
                                         <lord-icon target=".nav-item" src="https://cdn.lordicon.com/oaflahpk.json"
@@ -245,6 +272,37 @@
                         {{-- <button class="btn theme-bg-color text-white btn-md w-100 mt-4 fw-bold" type="submit">Buat --}}
                         {{-- Pesanan</button> --}}
                     </div>
+                    @if ($transaksi->komplain != null)
+                        <div class="right-side-summery-box">
+                            <div class="summery-box-2">
+                                <div class="summery-header">
+                                    <h3>Komplain</h3>
+                                    <p class="text-primary">** Komplain sudah diterima dan akan dibalas via
+                                        email.</p>
+                                </div>
+
+                                <ul class="summery-contain">
+
+                                    <li class="mb-2 mt-0">
+                                        <p class="fw-bold text-muted">Isi Komplain : </p>
+                                        <p class=" ml-2 small text-muted fst-italic">
+                                            {{ $transaksi->komplain->isi_komplain }}</p>
+                                    </li>
+                                    <li class="mb-2 mt-0">
+                                        <p class=" ml-2 small text-muted fst-italic">
+                                            <img src="{{ asset('storage/' . $transaksi->komplain->gambar_komplain) }}"
+                                                alt="Komplain" class="img-thumbnail">
+                                        </p>
+                                    </li>
+
+                                </ul>
+
+                            </div>
+
+                            {{-- <button class="btn theme-bg-color text-white btn-md w-100 mt-4 fw-bold" type="submit">Buat --}}
+                            {{-- Pesanan</button> --}}
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

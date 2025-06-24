@@ -36,4 +36,8 @@ class Transaksi extends Model
     {
         return $this->hasMany(Detailtransaksi::class, 'transaksi_id', 'transaksi_id');
     }
+    function komplain(): HasOne
+    {
+        return $this->hasOne(Komplain::class, 'transaksi_id', 'transaksi_id');
+    }
 }

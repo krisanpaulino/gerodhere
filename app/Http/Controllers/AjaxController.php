@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Lokasitoko;
 use App\Models\LokasitokoModel;
+use App\Models\Pelanggan;
+use App\Models\Transaksi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class AjaxController extends Controller
 {
@@ -95,5 +98,12 @@ class AjaxController extends Controller
             ];
         }
         echo json_encode($array_response['data']);
+    }
+
+    function notifPelanggan()
+    {
+        $pelanggan = Pelanggan::where('user_id', '=', Session::get('user_id'))->first();
+        $count = Transaksi::where('pelanggan_id', $pelanggan->pelanggan_id)->where('read', 0)->count();
+        echo json_encode($count);
     }
 }

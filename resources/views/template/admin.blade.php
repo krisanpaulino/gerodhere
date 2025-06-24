@@ -93,6 +93,16 @@
                     </ul>
                 </li>
                 <li>
+                    <a href="<?= url('admin/komplain') ?>">
+                        <div class="parent-icon"><i class="fadeIn animated bx bx-error"></i>
+                        </div>
+                        <div class="menu-title">Komplain @if ($komp = \App\Models\Komplain::where('read', '=', 0)->count('komplain.komplain_id') > 0)
+                                <span class="badge bg-danger">{{ $komp }}</span>
+                            @endif
+                        </div>
+                    </a>
+                </li>
+                <li>
                     <a href="<?= url('admin/laporan') ?>">
                         <div class="parent-icon"><i class="fadeIn animated bx bx-paperclip"></i>
                         </div>

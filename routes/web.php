@@ -21,6 +21,7 @@ Route::post('/signup', [AuthController::class, 'registrasiPost'])->name('signup.
 
 Route::get('/ajax-carilokasi', [AjaxController::class, 'lokasi'])->name('ajax.getLokasi');
 Route::get('/ajax-cost', [AjaxController::class, 'cost'])->name('ajax.getCost');
+Route::get('/ajax-notif', [AjaxController::class, 'notifPelanggan'])->name('ajax.getNotif');
 Route::post('/profil/update', [AuthController::class, 'updateProfil'])->name('profil.update');
 Route::post('/profil/ganti-password', [AuthController::class, 'gantiPassword'])->name('profil.password');
 Route::get('/paid', [TransaksiController::class, 'paid'])->name('paid');
@@ -36,6 +37,7 @@ Route::post('/order/upload-bukti', [TransaksiController::class, 'uploadBukti'])-
 Route::get('/order', [HomeController::class, 'listOrder'])->name('order.list')->middleware(PelangganLogin::class);
 Route::get('/order/{id}', [HomeController::class, 'detailOrder'])->name('order.detail')->middleware(PelangganLogin::class);
 Route::post('/ulas', [HomeController::class, 'createUlasan'])->name('ulasan.post')->middleware(PelangganLogin::class);
+Route::post('/komplain', [HomeController::class, 'createKomplain'])->name('komplain.post')->middleware(PelangganLogin::class);
 
 Route::middleware(AdminLogin::class)->prefix('admin')->group(function () {
     Route::get('/', [DashboardController::class, 'admin'])->name('admin');
@@ -69,6 +71,9 @@ Route::middleware(AdminLogin::class)->prefix('admin')->group(function () {
     Route::post('/transaksi/verifikasi', [TransaksiController::class, 'verifikasi'])->name('verifikasi.post');
     Route::post('/transaksi/kirim', [TransaksiController::class, 'kirim'])->name('transaksi.kirim');
     Route::post('/transaksi/selesaikan', [TransaksiController::class, 'finishing'])->name('transaksi.finish');
+
+    Route::get('/komplain', [TransaksiController::class, 'komplain'])->name('komplain.index');
+    Route::get('/komplain/{id}', [TransaksiController::class, 'komplainDetail'])->name('komplain.detail');
 
     Route::get('/laporan', [LaporanController::class, 'laporanPage'])->name('laporan');
     Route::get('/laporan/cetak', [LaporanController::class, 'cetak'])->name('admin.cetak-laporan');

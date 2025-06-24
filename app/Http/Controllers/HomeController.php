@@ -7,6 +7,7 @@ use App\Models\Detailpembelian;
 use App\Models\Detailtransaksi;
 use App\Models\Kategori;
 use App\Models\Keranjang;
+use App\Models\Komplain;
 use App\Models\Pelanggan;
 use App\Models\Pembayaran;
 use App\Models\Produk;
@@ -156,5 +157,21 @@ class HomeController extends Controller
         $detail->update($validated);
 
         return back()->with('message', "successToast('Berhasil membuat ulasan');");
+    }
+    function createKomplain(Request $request)
+    {
+        // dd($request->all());
+        $validated = $request->validate([
+            'transaksi_id' => 'required',
+            'isi_komplain' => 'required',
+            'gambar_komplain' => 'required',
+        ]);
+        if ($request->file('gambar_komplain') != null) {
+            $path = $request->file('gambar_komplain')->storePublicly('komplain', 'public');
+            $validated['gambar_komplain'] = $path;
+            Komplain::insert($validated);
+            return redirect(route('order.list'))->with('success', 'Berhasil');
+        }
+        return redirect(route('order.list'))->with('danger', 'gagal');
     }
 }
